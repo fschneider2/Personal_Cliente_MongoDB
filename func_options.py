@@ -140,6 +140,157 @@ def criar_db():
     sub_menu_1(option_selec)
 
 #=======================================================================================#
+# Funções de ação para funcionalidade 2 do menu principal:
+def criar_colecao_inicial():
+
+    os.system('clear')
+    
+    print(f"Para criar uma Coleção, devera informar o nome do banco ou retorne ao menu principal para criar um, "
+    f"\nselecione como você deseja prosseguir: \n{menus('sub_menu_2')}")
+
+    options_menu = ('0', '1', '2')
+
+    option_selec = input("Digite:>>> ")
+    os.system('clear')
+
+    while option_selec not in options_menu:
+        os.system('clear')
+        print(f'Opção {option_selec} invalida')
+        print(f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{menus("sub_menu_2")}')
+        option_selec = input("Digite:>>> ")
+
+    option_selec = int(option_selec)
+    return option_selec
+
+
+def sub_menu_2(option_selec):
+
+    if option_selec == 0:
+        app_off()
+
+    if option_selec == 1:
+
+        os.system('clear')
+
+        print("Ao criar uma coleção, irei inserir automaticamente um documento com _id = 0, chave = arquivo, valor = teste.")
+
+        list_db = conexao.list_database_names()
+
+        print(f"\nBancos disponiveis: \n{list_db}")
+
+        name_db = input("\nDigite nome do banco para qual deseja criar a coleção:>>> ")
+
+        while name_db not in list_db:
+            os.system('clear')
+            print(f"Banco {name_db} não existe.")
+            print(f"\nBancos disponiveis: \n{list_db}")
+            name_db = input("\nDigite nome do banco para qual deseja criar a coleção:>>> ")
+
+        db = conexao[name_db]
+        
+        name_collection = input("\nDigite nome da coleção a ser criada:>>> ")
+
+        collection_create = db[name_collection]
+
+        collection_create.insert_one(
+            {
+                "_id": 0,
+                "arquivo": "teste"
+            }
+        )
+
+        print(f"Coleção {name_collection} criada com sucesso!")
+        sleep(1.2)
+        option = criar_colecao_inicial()
+        sub_menu_2(option)
+
+    if option_selec == 2:
+        func_app.app()
+
+def criar_colecao():
+    option_select = criar_colecao_inicial()
+
+    sub_menu_2(option_select)
+
+#=======================================================================================#
+# Funções de ação para funcionalidade 7 do menu principal:
+
+def print_bancos():
+    list_db = conexao.list_database_names()   
+
+    print('Bancos Disponiveis: \n')
+    print('='*20)
+
+    for banco in list_db:
+        print(f"  {banco}")
+
+    print('='*20)    
+
+def menu_consulta_inicial():
+
+    options_menu = ('0', '1', '2')
+
+    print(
+        f"\nPara prosseguir Informe uma das seguintes opções do menu:{menus('sub_menu_7')}")
+
+    option_selec = input("Digite:>>> ")
+
+    while option_selec not in options_menu:
+        os.system('clear')
+        print(f'Opção {option_selec} invalida')
+        print(
+            f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{menus("sub_menu_7")}')
+        option_selec = input("Digite:>>> ")
+
+    option_selec = int(option_selec)
+    return option_selec
+
+def sub_menu_7(option_selec):
+
+    if option_selec == 0:
+        app_off()
+
+    if option_selec == 1:
+
+        os.system('clear')
+
+        print_bancos()
+
+        list_db = conexao.list_database_names()  
+
+        name_db = input("\nDigite nome do banco para qual deseja consultar a(s) coleção(ões):>>> ")
+
+        while name_db not in list_db:
+            os.system('clear')
+            print(f"Banco {name_db} não existe.")
+            print(f"\nBancos disponiveis: \n{list_db}")
+            name_db = input("\nDigite nome do banco para qual deseja consultar a(s) coleção(ões):>>> ")
+
+        banco = conexao[name_db]
+
+        list_collections = banco.list_collection_names()
+
+        sleep(2)
+        os.system('clear')
+
+        
+        print(f"\nColeções do banco {name_db}: \n{list_collections}")
+
+        option = menu_consulta_inicial()
+        sub_menu_7(option)
+
+    if option_selec == 2:
+        os.system('clear')
+        func_app.app()
+
+def listar_bancos_colecoes():
+
+    print_bancos()
+
+    option_selec = menu_consulta_inicial()
+
+    sub_menu_7(option_selec)
+    
 
 
     

@@ -12,8 +12,7 @@ def menus(name):
             "\n4 - Buscar documentos, " 
             "\n5 - Deletar documentos, " 
             "\n6 - Remover coleção, "
-            "\n7 - Listar Bancos de dados, "
-            "\n8 - Listar Coleções, "
+            "\n7 - Listar Bancos de dados e coleções, "
             "\n0 - Sair.\n")
 
     if name == "sub_menu_1":
@@ -65,15 +64,11 @@ def menus(name):
                 "\n2 - Retornar ao menu principal, "
                 "\n0 - Sair.\n")
 
-    if name == "sub_menu_8":
-        return ("\n1 - Listar bancos, "
-                "\n2 - Informar nome banco, "
-                "\n3 - Sair.\n")
-
-    if name == "sub_menu_8_2":
+    if name == "sub_menu_7":
         return ("\n1 - Listar coleções, "
                 "\n2 - Retornar ao menu principal, "
                 "\n0 - Sair.\n")
+
 
 # Função de saudação, para dar Bom dia, boa tarde ou boa noite ao usuário, com base na hora atual do datetime.
 def salutation():
@@ -104,22 +99,22 @@ def user_name_and_salutation():
     print(f"{salutation()} {user_name}! \n\nVou lhe auxiliar nas funções básicas de um SGBD MongoDB.")
     
 # Função inicial, traz o menu principal e retorna a opção escolhida pelo cliente.
-def inicial():
+def inicial(options_menu, string):
 
-    options_menu = ('0','1','2','3','4','5','6','7','8')
+    options_menu = options_menu
 
-    print(f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{menus("menu")}')
-    opcao_menu_principal = input("Digite:>>> ")
+    print(string)
+    option_select = input("Digite:>>> ")
 
     os.system('clear')
         
-    while opcao_menu_principal not in options_menu:
+    while option_select not in options_menu:
         os.system('clear')
-        print(f'Opção {opcao_menu_principal} invalida')
-        print(f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{menus("menu")}')
-        opcao_menu_principal = input("Digite:>>> ")
+        print(f'Opção {option_select} invalida')
+        print(f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{menus(menu_name)}')
+        option_select = input("Digite:>>> ")
 
-    opcao_menu_principal = int(opcao_menu_principal)
+    option_select = int(option_select)
 
-    return opcao_menu_principal
+    return option_select
 
