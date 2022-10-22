@@ -104,6 +104,7 @@ def inicial(options_menu, string):
     options_menu = options_menu
 
     print(string)
+    
     option_select = input("Digite:>>> ")
 
     os.system('clear')
@@ -111,7 +112,7 @@ def inicial(options_menu, string):
     while option_select not in options_menu:
         os.system('clear')
         print(f'Opção {option_select} invalida')
-        print(f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{menus(menu_name)}')
+        print(string)
         option_select = input("Digite:>>> ")
 
     option_select = int(option_select)

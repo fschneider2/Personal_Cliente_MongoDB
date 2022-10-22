@@ -21,48 +21,30 @@ def app_off():
 #=======================================================================================#
 # Funções para execução das funcionalidades da opção 1 do menu principal:
 
-# Funções para criar Bancos de dados, questão 5 letra A.
-# todas as funções abaixo são relacionadas a funcionalidade criar bancos de dados.
+# Funções para criar Bancos de dados
 
 #Faz a chamada inicial, trazendo o menu, pegando a opção do usuario e retornando.
 def criar_db_inicial():
 
     os.system('clear')
-    print(f"Para criar um banco de dados no MongoDB, é necessário inserir ao menos uma coleção e um documento, "
-          f"selecione como você deseja prosseguir: \n{menus('sub_menu_1')}")
+
+    string = (f"Para criar um banco de dados no MongoDB, "
+    f"é necessário inserir ao menos uma coleção e um documento, selecione como você deseja prosseguir: \n{menus('sub_menu_1')}")
 
     options_menu = ('0', '1', '2')
 
-    option_selec = input("Digite:>>> ")
-    os.system('clear')
+    option_selec = inicial(options_menu, string)
 
-    while option_selec not in options_menu:
-        os.system('clear')
-        print(f'Opção {option_selec} invalida')
-        print(f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{menus("sub_menu_1")}')
-        option_selec = input("Digite:>>> ")
-
-    option_selec = int(option_selec)
     return option_selec
 
 # esta função retorna um menu, que será invocado após o usuario incluir o banco.
 def sub_menu_1_1():
 
-    print(f"\n Selecione uma das seguintes opções :\n{menus('sub_menu_1_1')}")
-
     options_menu = ('0', '1', '2')
+    
+    string = f"\n Selecione uma das seguintes opções :\n{menus('sub_menu_1_1')}"
 
-    option_selec = input("Digite:>>> ")
-
-    os.system('clear')
-
-    while option_selec not in options_menu:
-
-        print(f'Opção {option_selec} invalida')
-        print(f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{menus("sub_menu_1_1")}')
-        option_selec = input("Digite:>>> ")
-
-    option_selec = int(option_selec)
+    option_selec = inicial(options_menu, string)
     
     if option_selec == 0:
         app_off()
@@ -144,24 +126,15 @@ def criar_db():
 def criar_colecao_inicial():
 
     os.system('clear')
-    
-    print(f"Para criar uma Coleção, devera informar o nome do banco ou retorne ao menu principal para criar um, "
-    f"\nselecione como você deseja prosseguir: \n{menus('sub_menu_2')}")
 
     options_menu = ('0', '1', '2')
 
-    option_selec = input("Digite:>>> ")
-    os.system('clear')
+    string = (f"Para criar uma Coleção, devera informar o nome do banco ou retorne ao "
+    f"menu principal para criar um, \nselecione como você deseja prosseguir: \n{menus('sub_menu_2')}")
 
-    while option_selec not in options_menu:
-        os.system('clear')
-        print(f'Opção {option_selec} invalida')
-        print(f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{menus("sub_menu_2")}')
-        option_selec = input("Digite:>>> ")
+    option_selec = inicial(options_menu, string)
 
-    option_selec = int(option_selec)
     return option_selec
-
 
 def sub_menu_2(option_selec):
 
@@ -229,20 +202,11 @@ def print_bancos():
 def menu_consulta_inicial():
 
     options_menu = ('0', '1', '2')
+    
+    string = f"\nPara prosseguir Informe uma das seguintes opções do menu:{menus('sub_menu_7')}"
+    
+    option_selec = inicial(options_menu, string)
 
-    print(
-        f"\nPara prosseguir Informe uma das seguintes opções do menu:{menus('sub_menu_7')}")
-
-    option_selec = input("Digite:>>> ")
-
-    while option_selec not in options_menu:
-        os.system('clear')
-        print(f'Opção {option_selec} invalida')
-        print(
-            f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{menus("sub_menu_7")}')
-        option_selec = input("Digite:>>> ")
-
-    option_selec = int(option_selec)
     return option_selec
 
 def sub_menu_7(option_selec):
@@ -261,6 +225,7 @@ def sub_menu_7(option_selec):
         name_db = input("\nDigite nome do banco para qual deseja consultar a(s) coleção(ões):>>> ")
 
         while name_db not in list_db:
+
             os.system('clear')
             print(f"Banco {name_db} não existe.")
             print(f"\nBancos disponiveis: \n{list_db}")
@@ -273,7 +238,6 @@ def sub_menu_7(option_selec):
         sleep(2)
         os.system('clear')
 
-        
         print(f"\nColeções do banco {name_db}: \n{list_collections}")
 
         option = menu_consulta_inicial()

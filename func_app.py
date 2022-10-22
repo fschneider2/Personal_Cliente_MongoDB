@@ -1,4 +1,4 @@
-from func_options import app_off, criar_db, criar_colecao, listar_bancos_colecoes
+from func_options import app_off, criar_db, criar_colecao, listar_bancos_colecoes, menus
 from basic_func import inicial
 
 def app():
@@ -6,6 +6,7 @@ def app():
     while app_on_off == False:
 
         options_menu = ('0','1','2','3','4','5','6','7','8')
+
         string = f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{menus("menu")}'
         
         opcao_menu_principal = inicial(options_menu, string)
