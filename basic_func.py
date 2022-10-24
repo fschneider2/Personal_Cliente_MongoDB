@@ -36,11 +36,9 @@ def menus(name):
                 "\n0 - Sair.\n")
 
     if name == "sub_menu_4_1":
-        return ("\n1 - 1 documento, "
-                "\n2 - 5 documentos, "
-                "\n3 - Todos documentos, "
-                "\n4 - Informe a quantidade, "
-                "\n5 - Retornar ao menu principal, "
+        return ("\n1 - Informe a quantidade de documentos, "
+                "\n2 - Informe a quantidade de documentos, "
+                "\n3 - Retornar ao menu principal, "
                 "\n0 - Sair.\n")
 
     if name == "sub_menu_4_2":

@@ -14,8 +14,10 @@ conexao = pymongo.MongoClient("mongodb://localhost:27017/")
 
 def app_off():
     os.system('clear')
-    print(f'\nObrigado por utilizar nosso aplicativo {salutation()}')
-    sleep(0.5)
+    print(f'\nObrigado por utilizar nosso aplicativo. {salutation()}!')
+    print('\nAplicativo desenvolvido por Fernando Schneider.\n')
+    sleep(2.5)
+    os.system('clear')
     return True
 
 #=======================================================================================#
@@ -24,7 +26,7 @@ def app_off():
 # Funções para criar Bancos de dados
 
 #Faz a chamada inicial, trazendo o menu, pegando a opção do usuario e retornando.
-def criar_db_inicial():
+def menu_criar_db_inicial():
 
     os.system('clear')
 
@@ -38,7 +40,7 @@ def criar_db_inicial():
     return option_selec
 
 # esta função retorna um menu, que será invocado após o usuario incluir o banco.
-def sub_menu_1_1():
+def sub_menu_criar_db():
 
     options_menu = ('0', '1', '2')
     
@@ -50,15 +52,15 @@ def sub_menu_1_1():
         app_off()
 
     if option_selec == 1:
-        option = criar_db_inicial()
-        sub_menu_1(option)
+        option = menu_criar_db_inicial()
+        sub_menu_func_criar_db(option)
 
     if option_selec == 2:
         func_app.app()
 
 # esta função recebe a criar_db_inicial, e executa as opções de criação do banco,
 # retorna um sub_menu, cujas opções são inserir um novo banco, sair ou voltar ao menu inicial.
-def sub_menu_1(option_selec):
+def sub_menu_func_criar_db(option_selec):
 
     if option_selec == 0:
         app_off()
@@ -83,7 +85,7 @@ def sub_menu_1(option_selec):
     
         print(f"Banco {name_db} criado com sucesso!")
 
-        sub_menu_1_1()
+        sub_menu_criar_db()
 
     if option_selec == 2:
 
@@ -111,19 +113,19 @@ def sub_menu_1(option_selec):
 
         print(f"Banco {name_db}, coleção {name_collection} e documento criados com sucesso!")
         
-        sub_menu_1_1()
+        sub_menu_criar_db()
 
 # Função de invocação, invoca e organiza as funções de criação de banco 
 # para depois ser invocada pela função app() do arquivo func_app.
 def criar_db():
 
-    option_selec = criar_db_inicial()
+    option_selec = menu_criar_db_inicial()
 
-    sub_menu_1(option_selec)
+    sub_menu_func_criar_db(option_selec)
 
 #=======================================================================================#
 # Funções de ação para funcionalidade 2 do menu principal:
-def criar_colecao_inicial():
+def menu_criar_colecao_inicial():
 
     os.system('clear')
 
@@ -136,7 +138,7 @@ def criar_colecao_inicial():
 
     return option_selec
 
-def sub_menu_2(option_selec):
+def sub_menu_criar_colecao(option_selec):
 
     if option_selec == 0:
         app_off()
@@ -174,30 +176,137 @@ def sub_menu_2(option_selec):
 
         print(f"Coleção {name_collection} criada com sucesso!")
         sleep(1.2)
-        option = criar_colecao_inicial()
-        sub_menu_2(option)
+        option = menu_criar_colecao_inicial()
+        sub_menu_criar_colecao(option)
 
     if option_selec == 2:
         func_app.app()
 
 def criar_colecao():
-    option_select = criar_colecao_inicial()
+    option_select = menu_criar_colecao_inicial()
 
-    sub_menu_2(option_select)
+    sub_menu_criar_colecao(option_select)
+
+#=======================================================================================#
+# Funções de ação para funcionalidade 3 do menu principal:
+
+def menu_inserir_documento_inicial():
+
+    os.system('clear')
+
+    options_menu = ('0', '1', '2')
+
+    string = (f"Para criar um documento, devera informar o nome do banco e da coleção, ou retorne ao "
+    f"menu principal para criar. \nselecione como você deseja prosseguir: \n{menus('sub_menu_3')}")
+
+    option_selec = inicial(options_menu, string)
+
+    return option_selec
+
+def inserir_documento_db(colecao): 
+
+    colecao = colecao 
+
+    print('Para inserir um documento utilizarei a função: collection_create.insert_one({"chave": "valor"})\n '
+    '\nInforme abaixo a(s) chave(s) e o(s) valor(es) que deseja inserir no documento, para encerrar digite exit no campo chave.\n')
+
+    dicionario = {}
+
+    fim = False
+
+    while fim == False:
+
+        valor_chave = input('Digite a chave:>>> ') 
+
+        if valor_chave == "exit":
+            fim = True
+
+        else:
+            valor = input('Digite o valor:>>> ')
+            dicionario[valor_chave] = valor
+
+    if len(dicionario) > 0:
+        colecao.insert_one(dicionario)
+        print('Documento inserido com sucesso!')
+    
+    else:
+        print('Documento vazio, não iserido')
+        sleep(1)
+        os.system('clear')
+        inserir_documento_db(colecao)
+
+def sub_menu_inserir_documento(option_selec):
+
+    if option_selec == 0:
+        app_off()
+    
+    if option_selec == 1:
+
+        os.system('clear')
+
+        print_bancos()
+
+        list_db = conexao.list_database_names()  
+
+        name_db = input("\nDigite nome do banco para qual deseja consultar a(s) coleção(ões) ou exit para retornar:>>> ")
+
+        if name_db == "exit":
+            option = menu_inserir_documento_inicial()
+            sub_menu_inserir_documento(option)
+
+        while name_db not in list_db:
+
+            os.system('clear')
+            print(f"Banco {name_db} não existe.")
+            print(f"\nBancos disponiveis: \n{list_db}")
+            name_db = input("\nDigite nome do banco para qual deseja consultar a(s) coleção(ões) ou exit para retornar:>>> ")
+            if name_db == "exit":
+                option = menu_inserir_documento_inicial()
+                sub_menu_inserir_documento(option)
+
+        banco = conexao[name_db]
+
+        list_collections = banco.list_collection_names()
+
+        print(f"\n Coleções disponiveis:\n{list_collections}")
+
+        collection_selec = input("\nDigite nome da coleção para qual deseja inserir o documeto ou exit para retornar:>>> ")
+
+        if collection_selec == "exit":
+            option = menu_inserir_documento_inicial()
+            sub_menu_inserir_documento(option)
+
+        while collection_selec not in list_collections:
+
+            os.system('clear')
+            print(f"Coleção {collection_selec} não existe no banco {name_db}.")
+            print(f"\nColeções disponiveis: \n{list_collections}")
+            collection_selec  = input("\nDigite nome da coleção para qual deseja inserir o documeto ou exit para retornar:>>> ")
+            if collection_selec == "exit":
+                option = menu_inserir_documento_inicial()
+                sub_menu_inserir_documento(option)
+
+        os.system('clear')
+
+        colecao = banco[collection_selec]
+
+        inserir_documento_db(colecao)
+
+        sleep(1.2)
+
+        os.system('clear')
+        option = menu_inserir_documento_inicial()
+        sub_menu_inserir_documento(option)
+    
+    if option_selec == 2:
+        func_app.app()
+
+def inserir_documento():
+    option_selec = menu_inserir_documento_inicial()
+    sub_menu_inserir_documento(option_selec)
 
 #=======================================================================================#
 # Funções de ação para funcionalidade 7 do menu principal:
-
-def print_bancos():
-    list_db = conexao.list_database_names()   
-
-    print('Bancos Disponiveis: \n')
-    print('='*20)
-
-    for banco in list_db:
-        print(f"  {banco}")
-
-    print('='*20)    
 
 def menu_consulta_inicial():
 
@@ -209,7 +318,19 @@ def menu_consulta_inicial():
 
     return option_selec
 
-def sub_menu_7(option_selec):
+def print_bancos():
+
+    list_db = conexao.list_database_names()   
+
+    print('Bancos Disponiveis: \n')
+    print('='*20)
+
+    for banco in list_db:
+        print(f"  {banco}")
+
+    print('='*20)    
+
+def sub_menu_consulta(option_selec):
 
     if option_selec == 0:
         app_off()
@@ -241,7 +362,7 @@ def sub_menu_7(option_selec):
         print(f"\nColeções do banco {name_db}: \n{list_collections}")
 
         option = menu_consulta_inicial()
-        sub_menu_7(option)
+        sub_menu_consulta(option)
 
     if option_selec == 2:
         os.system('clear')
@@ -253,8 +374,9 @@ def listar_bancos_colecoes():
 
     option_selec = menu_consulta_inicial()
 
-    sub_menu_7(option_selec)
-    
+    sub_menu_consulta(option_selec)
+
+
 
 
     
