@@ -1,5 +1,9 @@
+import pymongo
 from datetime import datetime
+from time import sleep
 import os
+
+conexao = pymongo.MongoClient("mongodb://localhost:27017/")
 
 # Função com o menu de opções e submenus, será utilizado para criação do laço de repetição principal do aplicativo, 
 # o menu principal e sub menu, cada sub menu esta nomeado de acordo com as opções do menu, e trazem uma funcionalidade 
@@ -14,17 +18,13 @@ def menus(name):
 
     if name == "sub_menu_1":
         return ('\n(1) - Continuar.'
-                '\n(2) - Retornar ao menu inicial.\n')
+                '\n(2) - Retornar ao menu inicial.'
+                '\n(0) - Sair.\n')
 
     if name == "sub_menu_2":
         return ("\n(1) - Todos os documentos. "
                 "\n(2) - Informe a quantidade de documentos. "
                 "\n(3) - Retornar ao menu principal. "
-                "\n(0) - Sair.\n")
-
-    if name == "sub_menu_2_1":
-        return ("\n(1) - Buscar novos documentos. "
-                "\n(2) - Retornar ao menu principal. "
                 "\n(0) - Sair.\n")
 
     if name == "sub_menu_3":
@@ -38,6 +38,7 @@ def menus(name):
                 "\n(2) - Retornar ao menu principal. "
                 "\n(0) - Sair.\n")
 
+    return decision
 # Função de saudação, para dar Bom dia, boa tarde ou boa noite ao usuário, com base na hora atual do datetime.
 def salutation():
 
@@ -62,6 +63,8 @@ def user_name_and_salutation():
     print(f"{salutation()} {user_name}! \n\nVou lhe auxiliar nas funções básicas de um SGBD MongoDB.")
     
 # Função inicial, traz o menu principal e retorna a opção escolhida pelo cliente.
+# Utilizada em varios trechos do código, ela recebe uma string e um menu, faz o print da string, traz as opções, 
+# faz um filtro, evitando que o usuario insira uma informação invalida e retorna a opção escolhida
 def inicial(options_menu, string):
     options_menu = options_menu
     print(string)
@@ -76,3 +79,33 @@ def inicial(options_menu, string):
 
     return option_select
 
+# Função para padronizar o sleep, é utilizado principalmente em locais onde 
+# tem uma mensagem que antecede a limpeza da tela, dando tempo para o usuario ler.
+def regressive_sleep():
+    for i in range(3,0,-1):
+        print(f'Voltando em {i}')
+        sleep(1)
+    os.system('clear')
+
+#Função para mostrar os bancos disponiveis, utilizado em quase todas as funcionalidades.
+def print_bancos():
+    list_db = conexao.list_database_names()
+    print('Bancos Disponiveis: \n')
+    print('='*20)
+    for banco in list_db:
+        print(f"  {banco}")
+    print('='*20)
+
+def validade_decision(string):
+
+    print(string)
+    decision = input('\nDigite S/s(sim) ou N/n(não):>>>  ')
+
+    list_decision = ('S', 's', 'N', 'n')
+
+    while decision not in list_decision:
+        print(string)
+        print('\nDigite S ou s para sim e N ou n para não:')
+        decision = input('Digite:>>> ')
+
+    return decision

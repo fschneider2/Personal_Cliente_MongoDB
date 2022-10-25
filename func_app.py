@@ -1,6 +1,8 @@
 from func_options import app_off, create_db_collection_doc, list_db_collections, menus, drop_doc_collection, find_doc_collection
 from basic_func import inicial
+import os
 
+# Função que recebe as funcões do arquivo func_options e do basic_func
 def app():
     
     app_on_off = False
@@ -17,7 +19,7 @@ def app():
             app_on_off = app_off()
 
         if opcao_menu_principal == '1':
-            app_on_off = create_db_collection_doc()
+            create_db_collection_doc()
         
         if opcao_menu_principal == '2':
             app_on_off = find_doc_collection()
