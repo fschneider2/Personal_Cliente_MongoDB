@@ -10,7 +10,6 @@ conexao = pymongo.MongoClient("mongodb://localhost:27017/")
 # função da opção 0 do menu principal:
 # Função para desligar o app, é chamada em todos os sub_menus e no menu principal.
 
-
 def app_off():
     os.system('clear')
     print(f'\nObrigado por utilizar nosso aplicativo. {salutation()}!')
@@ -21,8 +20,6 @@ def app_off():
 
 #=======================================================================================#
 # Funções para execução das funcionalidades da opção 1 do menu principal:
-
-
 def menu_criar_db():
     os.system('clear')
     options_menu = ('1', '2')
@@ -42,7 +39,6 @@ def menu_criar_db():
 
     option_selec = inicial(options_menu, string)
     return option_selec
-
 
 def inserir_documento_db(colecao):
     colecao = colecao
@@ -64,10 +60,9 @@ def inserir_documento_db(colecao):
         print('Documento inserido com sucesso!')
     else:
         print('Documento vazio, não iserido')
-        sleep(1)
+        sleep(3)
         os.system('clear')
         inserir_documento_db(colecao)
-
 
 def create_db():
 
@@ -77,18 +72,17 @@ def create_db():
         os.system('clear')
         print_bancos()
         list_db = conexao.list_database_names()
-        print(
-            'Digite o nome de um dos bancos informados ou o nome do banco que deseja criar.')
+        print('Digite o nome de um dos bancos listados ou o nome do banco que deseja criar.')
         name_db = input('\nDigite:>>> ')
 
         if name_db not in list_db:
             print(f'Banco {name_db} não existe, deseja criar?')
-            decision = input('Digite S/s(sim) ou N/n(não):>>>  ')
+            decision = input('\nDigite S/s(sim) ou N/n(não):>>>  ')
 
             list_decision = ('S', 's', 'N', 'n')
 
             while decision not in list_decision:
-                print('Digite S ou s para sim e N ou n para não:')
+                print('\bDigite S ou s para sim e N ou n para não:')
                 decision = input('Digite:>>> ')
 
             if decision == "N" or decision == 'n':
@@ -102,7 +96,6 @@ def create_db():
 
     return name_db
 
-
 def create_collection(name_db):
 
     db = conexao[name_db]
@@ -112,11 +105,9 @@ def create_collection(name_db):
     list_collections = db.list_collection_names()
 
     os.system('clear')
-    print(
-        f'\nColeções disponiveis no banco {name_db}:  \n{list_collections}\n')
+    print(f'\nColeções disponiveis no banco {name_db}:  \n{list_collections}\n')
 
-    collection = input(
-        'Digite a coleção, o nome da coleção que seja criar ou exit para concluir e voltar ao menu inical:>>> ')
+    collection = input('\nDigite a coleção, o nome da coleção que deseja criar ou exit para concluir e voltar ao menu inical:>>> ')
 
     if collection == "exit":
         collection_autocreate = db['teste']
@@ -133,12 +124,12 @@ def create_collection(name_db):
 
     if collection not in list_collections:
         print(f'Coleção {collection} não existe, deseja criar?')
-        decision = input('Digite S/s(sim) ou N/n(não):>>>  ')
+        decision = input('\nDigite S/s(sim) ou N/n(não):>>>  ')
 
         list_decision = ('S', 's', 'N', 'n')
 
         while decision not in list_decision:
-            print('Digite S ou s para sim e N ou n para não:')
+            print('\nDigite S ou s para sim e N ou n para não:')
             decision = input('Digite:>>> ')
 
         if decision == "N" or decision == 'n':
@@ -156,8 +147,7 @@ def create_collection(name_db):
         list_collections = db.list_collection_names()
 
         os.system('clear')
-        print(
-            f'\nColeções disponiveis no banco {name_db}:  \n{list_collections}\n')
+        print(f'\nColeções disponiveis no banco {name_db}:  \n{list_collections}\n')
 
     print('Pressione 1 para criar uma nova coleção, exit para concluir e voltar ao inicio ou qualquer tecla para inserir um documento.')
     decision = input('Digite:>>> ')
@@ -178,14 +168,14 @@ def create_collection(name_db):
     print(f'Você esta no banco {name_db} e coleção {collection}\n')
     inserir_documento_db(collection_selec)
 
-    print('Deseja inserir um novo documento?')
+    print('\nDeseja inserir um novo documento?')
 
-    decision = input('Digite S/s(sim) ou N/n(não):>>> ')
+    decision = input('\nDigite S/s(sim) ou N/n(não):>>> ')
 
     list_decision = ('S', 's', 'N', 'n')
 
     while decision not in list_decision:
-        print('Digite S ou s para sim e N ou n para não:')
+        print('\nDigite S ou s para sim e N ou n para não:')
         decision = input('Digite:>>> ')
 
     if decision == 'S' or decision == 's':
@@ -317,12 +307,12 @@ def find_doc_collection():
 
     if option_selec == '2':
 
-        limit = input('\nDigite o limite de resultados\nDigite:>>> ')
+        limit = input('\nDigite o numero correspondente ao limite de documentos que deseja visualizar\nDigite:>>> ')
         test_limit_is_number = str.isnumeric(limit)
 
         while test_limit_is_number == False:
             print(f'Informação {limit} não é valido, insira somente numeros')
-            limit = input('Digite o limite de resultados')
+            limit = input('\nDigite o numero correspondente ao limite de documentos que deseja visualizar\nDigite:>>> ')
             test_limit_is_number = str.isnumeric(limit)
 
         limit = int(limit)
@@ -368,7 +358,7 @@ def drop_doc():
     db = conexao[name_db]
     list_collections = db.list_collection_names()
 
-    print(list_collections)
+    print(f"\nColeções disponiveis: \n{list_collection}")
     print('\nInforme o nome da coleção')
     collection = input('Digite:>>> ')
 
@@ -381,7 +371,7 @@ def drop_doc():
     collection_selec = db[collection]
 
     os.system('clear')
-    print(f'Você esta trabalhando no banco {name_db} - coleção {collection}.\n')
+    print(f'Você esta trabalhando no banco {name_db} | coleção {collection}.\n')
 
     print('\nInforme a chave e valor para consulta e posterior exclusão dos dados')
 
@@ -407,7 +397,7 @@ def drop_doc():
         sleep(4)
         drop_doc()
 
-    print('\nTem certeza que deseja excluir? Digite N/n para retornar ao inicio sem excluir ou S/s para continuar.\n')
+    print('\nTem certeza que deseja excluir? Digite N/n para retornar ao inicio SEM excluir ou S/s para continuar.\n')
 
     decision = input('Digite S/s(sim) ou N/n(não):>>>  ')
 
@@ -435,9 +425,9 @@ def drop_doc():
 def drop_collection():
 
     os.system('clear')
-    print('Ao apagar uma coleção, você irá apagar todos os documentos e se for a unica coleção, o banco!\n')
+    print('Ao apagar uma coleção, você irá apagar todos os documentos contidos nele, e se for a unica coleção,irá apagar o banco!\n')
     print_bancos()
-    print('\nInforme o nome do banco para prosseguir ou exit para voltar \n')
+    print('\nInforme o nome do banco para prosseguir ou digite exit para voltar \n')
     name_db = input('Digite:>>> ')
 
     if name_db == 'exit':
@@ -467,17 +457,16 @@ def drop_collection():
     collection_selec = db[collection]
 
     os.system('clear')
+
     query = collection_selec.find({})
     count_docs_in_query = 0
 
     for count in query:
         count_docs_in_query += 1
 
-    print(
-        f'Você esta trabalhando no banco {name_db} | coleção {collection}.\n')
+    print(f'Você esta trabalhando no banco {name_db} | coleção {collection}.\n')
 
-    print(
-        f'Você tem certeza que deseja excluir a coleção {collection}? Ela possui {count_docs_in_query} documentos.\n')
+    print(f'Você tem certeza que deseja excluir a coleção {collection}? Ela possui {count_docs_in_query} documentos.\n')
 
     decision = input('Digite S/s(sim) ou N/n(não):>>>  ')
 
@@ -530,7 +519,6 @@ def print_bancos():
     list_db = conexao.list_database_names()
     print('Bancos Disponiveis: \n')
     print('='*20)
-
     for banco in list_db:
         print(f"  {banco}")
     print('='*20)
@@ -544,15 +532,13 @@ def sub_menu_consulta(option_selec):
         os.system('clear')
         print_bancos()
         list_db = conexao.list_database_names()
-        name_db = input(
-            "\nDigite nome do banco para qual deseja consultar a(s) coleção(ões):>>> ")
+        name_db = input("\nDigite nome do banco para qual deseja consultar a(s) coleção(ões):>>> ")
 
         while name_db not in list_db:
             os.system('clear')
             print(f"Banco {name_db} não existe.")
             print(f"\nBancos disponiveis: \n{list_db}")
-            name_db = input(
-                "\nDigite nome do banco para qual deseja consultar a(s) coleção(ões):>>> ")
+            name_db = input("\nDigite nome do banco para qual deseja consultar a(s) coleção(ões):>>> ")
 
         banco = conexao[name_db]
         list_collections = banco.list_collection_names()
