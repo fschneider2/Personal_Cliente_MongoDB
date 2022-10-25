@@ -1,16 +1,15 @@
 import pymongo
-import pprint
+from pprint import pprint
 import os
 from time import sleep
 from basic_func import menus, salutation, user_name_and_salutation, inicial
 import func_app
 
 conexao = pymongo.MongoClient("mongodb://localhost:27017/")
-
 #=======================================================================================#
 # função da opção 0 do menu principal:
+# Função para desligar o app, é chamada em todos os sub_menus e no menu principal.
 
-# Função para desligar o app, é chamada em todos os sub_menus e no menu principal. 
 
 def app_off():
     os.system('clear')
@@ -23,204 +22,39 @@ def app_off():
 #=======================================================================================#
 # Funções para execução das funcionalidades da opção 1 do menu principal:
 
-# Funções para criar Bancos de dados
 
-#Faz a chamada inicial, trazendo o menu, pegando a opção do usuario e retornando.
-def menu_criar_db_inicial():
-
+def menu_criar_db():
     os.system('clear')
+    options_menu = ('1', '2')
 
-    string = (f"Para criar um banco de dados no MongoDB, "
-    f"é necessário inserir ao menos uma coleção e um documento, selecione como você deseja prosseguir: \n{menus('sub_menu_1')}")
+    string = ('Você pode criar um banco de dados, uma coleção ou inserir documentos.\n'
+              '\nPara criar um banco, é so inserir o nome do banco a ser criado e após digite exit. '
+              '\nIrei criar um banco e adicionarei uma coleção e documento com o nome teste.\n'
 
-    options_menu = ('0', '1', '2')
+              '\nPara criar uma coleção, crie ou digite o nome de um banco existente e após digite o nome da coleção a ser criada.'
+              '\npor fim digite exit.\n'
+
+              '\nPara inserir um documento, crie ou selecione banco e coleção, após digite a(s) chave(s) e valor(es).'
+              '\npor fim, digite exit no campo chave para encerrar e salvar o documento no banco\n'
+              '\nPara inserir um documento utilizarei a função: collection_create.insert_one({"chave": "valor"})\n'
+              '\nSelecione para continuar:'
+              f'{menus("sub_menu_1")}\n')
 
     option_selec = inicial(options_menu, string)
-
     return option_selec
 
-# esta função retorna um menu, que será invocado após o usuario incluir o banco.
-def sub_menu_criar_db():
 
-    options_menu = ('0', '1', '2')
-    
-    string = f"\n Selecione uma das seguintes opções :\n{menus('sub_menu_1_1')}"
-
-    option_selec = inicial(options_menu, string)
-    
-    if option_selec == 0:
-        app_off()
-
-    if option_selec == 1:
-        option = menu_criar_db_inicial()
-        sub_menu_func_criar_db(option)
-
-    if option_selec == 2:
-        func_app.app()
-
-# esta função recebe a criar_db_inicial, e executa as opções de criação do banco,
-# retorna um sub_menu, cujas opções são inserir um novo banco, sair ou voltar ao menu inicial.
-def sub_menu_func_criar_db(option_selec):
-
-    if option_selec == 0:
-        app_off()
-
-    if option_selec == 1:
-
-        os.system('clear')
-
-        name_db = input("Digite nome do banco a ser criado:>>> ")
-
-        db = conexao[name_db]
-
-        collection_autocreate = db['teste']
-
-        collection_autocreate.insert_one(
-            {
-                "arquivo": "teste"
-            }
-        )
-
-        os.system('clear')
-    
-        print(f"Banco {name_db} criado com sucesso!")
-
-        sub_menu_criar_db()
-
-    if option_selec == 2:
-
-        os.system('clear')
-
-        name_db = input("Digite nome do banco a ser criado:>>> ")
-        
-        db = conexao[name_db]
-
-        name_collection = input("Digite nome da coleção a ser criada:>>> ")
-
-        collection_create = db[name_collection]
-
-        name_chave = input("Digite nome da chave:>>> ")
-
-        name_valor = input("Digite nome do valor:>>> ")
-
-        collection_create.insert_one(
-            {
-                name_chave: name_valor
-            }
-        )
-
-        os.system('clear')
-
-        print(f"Banco {name_db}, coleção {name_collection} e documento criados com sucesso!")
-        
-        sub_menu_criar_db()
-
-# Função de invocação, invoca e organiza as funções de criação de banco 
-# para depois ser invocada pela função app() do arquivo func_app.
-def criar_db():
-
-    option_selec = menu_criar_db_inicial()
-
-    sub_menu_func_criar_db(option_selec)
-
-#=======================================================================================#
-# Funções de ação para funcionalidade 2 do menu principal:
-def menu_criar_colecao_inicial():
-
-    os.system('clear')
-
-    options_menu = ('0', '1', '2')
-
-    string = (f"Para criar uma Coleção, devera informar o nome do banco ou retorne ao "
-    f"menu principal para criar um, \nselecione como você deseja prosseguir: \n{menus('sub_menu_2')}")
-
-    option_selec = inicial(options_menu, string)
-
-    return option_selec
-
-def sub_menu_criar_colecao(option_selec):
-
-    if option_selec == 0:
-        app_off()
-
-    if option_selec == 1:
-
-        os.system('clear')
-
-        print("Ao criar uma coleção, irei inserir automaticamente um documento com _id = 0, chave = arquivo, valor = teste.")
-
-        list_db = conexao.list_database_names()
-
-        print(f"\nBancos disponiveis: \n{list_db}")
-
-        name_db = input("\nDigite nome do banco para qual deseja criar a coleção:>>> ")
-
-        while name_db not in list_db:
-            os.system('clear')
-            print(f"Banco {name_db} não existe.")
-            print(f"\nBancos disponiveis: \n{list_db}")
-            name_db = input("\nDigite nome do banco para qual deseja criar a coleção:>>> ")
-
-        db = conexao[name_db]
-        
-        name_collection = input("\nDigite nome da coleção a ser criada:>>> ")
-
-        collection_create = db[name_collection]
-
-        collection_create.insert_one(
-            {
-                "_id": 0,
-                "arquivo": "teste"
-            }
-        )
-
-        print(f"Coleção {name_collection} criada com sucesso!")
-        sleep(1.2)
-        option = menu_criar_colecao_inicial()
-        sub_menu_criar_colecao(option)
-
-    if option_selec == 2:
-        func_app.app()
-
-def criar_colecao():
-    option_select = menu_criar_colecao_inicial()
-
-    sub_menu_criar_colecao(option_select)
-
-#=======================================================================================#
-# Funções de ação para funcionalidade 3 do menu principal:
-
-def menu_inserir_documento_inicial():
-
-    os.system('clear')
-
-    options_menu = ('0', '1', '2')
-
-    string = (f"Para criar um documento, devera informar o nome do banco e da coleção, ou retorne ao "
-    f"menu principal para criar. \nselecione como você deseja prosseguir: \n{menus('sub_menu_3')}")
-
-    option_selec = inicial(options_menu, string)
-
-    return option_selec
-
-def inserir_documento_db(colecao): 
-
-    colecao = colecao 
-
-    print('Para inserir um documento utilizarei a função: collection_create.insert_one({"chave": "valor"})\n '
-    '\nInforme abaixo a(s) chave(s) e o(s) valor(es) que deseja inserir no documento, para encerrar digite exit no campo chave.\n')
-
+def inserir_documento_db(colecao):
+    colecao = colecao
     dicionario = {}
-
     fim = False
+    print('\nInforme abaixo a(s) chave(s) e o(s) valor(es) que deseja inserir no documento, para encerrar digite exit no campo chave.\n')
 
     while fim == False:
-
-        valor_chave = input('Digite a chave:>>> ') 
+        valor_chave = input('Digite a chave:>>> ')
 
         if valor_chave == "exit":
             fim = True
-
         else:
             valor = input('Digite o valor:>>> ')
             dicionario[valor_chave] = valor
@@ -228,157 +62,511 @@ def inserir_documento_db(colecao):
     if len(dicionario) > 0:
         colecao.insert_one(dicionario)
         print('Documento inserido com sucesso!')
-    
     else:
         print('Documento vazio, não iserido')
         sleep(1)
         os.system('clear')
         inserir_documento_db(colecao)
 
-def sub_menu_inserir_documento(option_selec):
 
-    if option_selec == 0:
-        app_off()
-    
-    if option_selec == 1:
+def create_db():
 
+    option_selec = menu_criar_db()
+
+    if option_selec == "1":
         os.system('clear')
-
         print_bancos()
+        list_db = conexao.list_database_names()
+        print(
+            'Digite o nome de um dos bancos informados ou o nome do banco que deseja criar.')
+        name_db = input('\nDigite:>>> ')
 
-        list_db = conexao.list_database_names()  
+        if name_db not in list_db:
+            print(f'Banco {name_db} não existe, deseja criar?')
+            decision = input('Digite S/s(sim) ou N/n(não):>>>  ')
 
-        name_db = input("\nDigite nome do banco para qual deseja consultar a(s) coleção(ões) ou exit para retornar:>>> ")
+            list_decision = ('S', 's', 'N', 'n')
 
-        if name_db == "exit":
-            option = menu_inserir_documento_inicial()
-            sub_menu_inserir_documento(option)
+            while decision not in list_decision:
+                print('Digite S ou s para sim e N ou n para não:')
+                decision = input('Digite:>>> ')
 
-        while name_db not in list_db:
+            if decision == "N" or decision == 'n':
+                print('Voltando ao menu principal')
+                sleep(1.5)
+                os.system('clear')
+                create_db_collection_doc()
 
-            os.system('clear')
-            print(f"Banco {name_db} não existe.")
-            print(f"\nBancos disponiveis: \n{list_db}")
-            name_db = input("\nDigite nome do banco para qual deseja consultar a(s) coleção(ões) ou exit para retornar:>>> ")
-            if name_db == "exit":
-                option = menu_inserir_documento_inicial()
-                sub_menu_inserir_documento(option)
-
-        banco = conexao[name_db]
-
-        list_collections = banco.list_collection_names()
-
-        print(f"\n Coleções disponiveis:\n{list_collections}")
-
-        collection_selec = input("\nDigite nome da coleção para qual deseja inserir o documeto ou exit para retornar:>>> ")
-
-        if collection_selec == "exit":
-            option = menu_inserir_documento_inicial()
-            sub_menu_inserir_documento(option)
-
-        while collection_selec not in list_collections:
-
-            os.system('clear')
-            print(f"Coleção {collection_selec} não existe no banco {name_db}.")
-            print(f"\nColeções disponiveis: \n{list_collections}")
-            collection_selec  = input("\nDigite nome da coleção para qual deseja inserir o documeto ou exit para retornar:>>> ")
-            if collection_selec == "exit":
-                option = menu_inserir_documento_inicial()
-                sub_menu_inserir_documento(option)
-
-        os.system('clear')
-
-        colecao = banco[collection_selec]
-
-        inserir_documento_db(colecao)
-
-        sleep(1.2)
-
-        os.system('clear')
-        option = menu_inserir_documento_inicial()
-        sub_menu_inserir_documento(option)
-    
-    if option_selec == 2:
+    if option_selec == "2":
         func_app.app()
 
-def inserir_documento():
-    option_selec = menu_inserir_documento_inicial()
-    sub_menu_inserir_documento(option_selec)
+    return name_db
 
+
+def create_collection(name_db):
+
+    db = conexao[name_db]
+
+    name_db = name_db
+
+    list_collections = db.list_collection_names()
+
+    os.system('clear')
+    print(
+        f'\nColeções disponiveis no banco {name_db}:  \n{list_collections}\n')
+
+    collection = input(
+        'Digite a coleção, o nome da coleção que seja criar ou exit para concluir e voltar ao menu inical:>>> ')
+
+    if collection == "exit":
+        collection_autocreate = db['teste']
+        collection_autocreate.insert_one(
+            {
+                "arquivo": "teste"
+            }
+        )
+        print(f"Banco {name_db} criado com sucesso!")
+
+        sleep(2)
+        os.system('clear')
+        func_app.app()
+
+    if collection not in list_collections:
+        print(f'Coleção {collection} não existe, deseja criar?')
+        decision = input('Digite S/s(sim) ou N/n(não):>>>  ')
+
+        list_decision = ('S', 's', 'N', 'n')
+
+        while decision not in list_decision:
+            print('Digite S ou s para sim e N ou n para não:')
+            decision = input('Digite:>>> ')
+
+        if decision == "N" or decision == 'n':
+            print('Voltando ao inicio')
+            sleep(1.5)
+            os.system('clear')
+            create_db_collection_doc()
+
+        collection_selec = db[collection]
+        collection_selec.insert_one(
+            {
+                "arquivo": "teste"
+            }
+        )
+        list_collections = db.list_collection_names()
+
+        os.system('clear')
+        print(
+            f'\nColeções disponiveis no banco {name_db}:  \n{list_collections}\n')
+
+    print('Pressione 1 para criar uma nova coleção, exit para concluir e voltar ao inicio ou qualquer tecla para inserir um documento.')
+    decision = input('Digite:>>> ')
+
+    if decision == '1':
+        os.system('clear')
+        create_collection(name_db)
+
+    if decision == "exit":
+        sleep(1.5)
+        os.system('clear')
+        create_db_collection_doc()
+
+    collection_selec = db[collection]
+
+    os.system('clear')
+
+    print(f'Você esta no banco {name_db} e coleção {collection}\n')
+    inserir_documento_db(collection_selec)
+
+    print('Deseja inserir um novo documento?')
+
+    decision = input('Digite S/s(sim) ou N/n(não):>>> ')
+
+    list_decision = ('S', 's', 'N', 'n')
+
+    while decision not in list_decision:
+        print('Digite S ou s para sim e N ou n para não:')
+        decision = input('Digite:>>> ')
+
+    if decision == 'S' or decision == 's':
+        os.system('clear')
+        inserir_documento_db(collection_selec)
+
+    os.system('clear')
+    print('Voltando para menu inicial')
+    sleep(1.5)
+    func_app.app()
+
+
+def create_db_collection_doc():
+    name_db = create_db()
+    create_collection(name_db)
 #=======================================================================================#
-# Funções de ação para funcionalidade 7 do menu principal:
+# Funções de ação para funcionalidade 2 do menu principal:
 
-def menu_consulta_inicial():
+def home_menu_find():
 
-    options_menu = ('0', '1', '2')
-    
-    string = f"\nPara prosseguir Informe uma das seguintes opções do menu:{menus('sub_menu_7')}"
-    
+    os.system('clear')
+    options_menu = ('0', '1', '2', '3')
+
+    string = (f'\nVocê pode visualizar todos os documentos, informar a quantidade ou ainda retornar. '
+              f'\ninforme uma das opções para continuar \n{menus("sub_menu_2")}\n')
+
+    option_selec = inicial(options_menu, string)
+    return option_selec
+
+def search_docs(limit):
+
+    limit = limit
+
+    os.system('clear')
+
+    print_bancos()
+    list_db = conexao.list_database_names()
+    print('\nInforme o banco ou digite exit para retornar.\n')
+
+    name_db = input('Digite:>>> ')
+    os.system('clear')
+
+    if name_db == 'exit':
+        find_doc_collection()
+
+    while name_db not in list_db:
+        os.system('clear')
+        print(f"Banco {name_db} não existe.")
+        print(f"\nBancos disponiveis: \n{list_db}")
+        name_db = input("\ninforme um dos bancos da lista:>>> ")
+
+    db = conexao[name_db]
+    list_collections = db.list_collection_names()
+
+    print(f"Coleções disponiveis: {list_collections}")
+    print('\nInforme o nome da coleção')
+
+    collection = input('Digite:>>> ')
+
+    while collection not in list_collections:
+
+        os.system('clear')
+        print(f"Coleção {collection} não existe.")
+        print(f"\nColeções disponiveis: \n{list_collection}")
+        collection = input('\nInforme o nome da coleção:>>> ')
+
+    collection_selec = db[collection]
+
+    os.system('clear')
+    print(f'Você esta trabalhando no banco {name_db} | coleção {collection}.\n')
+
+    options_menu = ('1', '2')
+
+    string = ('Deseja ver todos os documentos dessa coleção ou aplicar um filtro "chave":"valor"?\n'
+    '\n(1) - Todos documentos da coleção\n(2) - Informar chave e valor\n')
+
     option_selec = inicial(options_menu, string)
 
+    if option_selec == "1":
+        query = collection_selec.find({}).limit(limit)
+
+        os.system('clear')
+        print(f'Documentos da coleção {collection}')
+        for doc in query:
+            pprint(doc)
+            print('\n')
+        input('Pressione qualquer tecla para voltar')
+        find_doc_collection()
+
+    if option_selec == "2":
+        os.system('clear')
+        print(f'Você esta trabalhando no banco {name_db} | coleção {collection}.\n')
+        print("\nInforme a chave e o valor\n")
+        key = input("Digite a chave:>>> ")
+        value = input("\nDigite o valor:>>> ")
+        
+        query = collection_selec.find(
+            {
+                key:{"$eq": value}
+            }
+        ).limit(limit)
+
+        count_docs_in_query = 0
+        for doc in query:
+            pprint(doc)
+            print('\n')
+            count_docs_in_query += 1
+
+        if count_docs_in_query == 0:
+            print(f'\n {key}:{value} não retornou nenhum documento.')
+            for i in range(5,0,-1):
+                print(f'Retornando em {i}')
+                sleep(1)
+            find_doc_collection()
+
+        input('Pressione qualquer tecla para voltar')
+        find_doc_collection()
+
+def find_doc_collection():
+    option_selec = home_menu_find()
+
+    if option_selec == '0':
+        os.system('clear')
+        app_off()
+
+    if option_selec == '1':
+        limit = 0
+        search_docs(limit)
+
+    if option_selec == '2':
+
+        limit = input('\nDigite o limite de resultados\nDigite:>>> ')
+        test_limit_is_number = str.isnumeric(limit)
+
+        while test_limit_is_number == False:
+            print(f'Informação {limit} não é valido, insira somente numeros')
+            limit = input('Digite o limite de resultados')
+            test_limit_is_number = str.isnumeric(limit)
+
+        limit = int(limit)
+
+        limit = int(limit)
+        search_docs(limit)
+        
+
+    if option_selec == '3':
+        func_app.app()
+#=======================================================================================#
+# Funções de ação para funcionalidade 3 do menu principal:
+def home_menu_drops():
+    os.system('clear')
+    options_menu = ('0', '1', '2', '3')
+
+    string = (f'\nInforme a opção desejada.\n{menus("sub_menu_3")}')
+
+    option_selec = inicial(options_menu, string)
+    return option_selec
+
+def drop_doc():
+    os.system('clear')
+    print('Para deletar arquivos, você deverá inserir a chave e valor. \nUtilizarei a função collection_selec.delete_many({chave:{$eq:valor}}) '
+          '\n\n!!!Após confirmar, todos os arquivos localizados serão excluidos!!!\n')
+
+    print_bancos()
+    list_db = conexao.list_database_names()
+    print('\nInforme o banco ou digite exit para retornar.\n')
+
+    name_db = input('Digite:>>> ')
+    os.system('clear')
+
+    if name_db == 'exit':
+        drop_doc_collection()
+
+    while name_db not in list_db:
+        os.system('clear')
+        print(f"Banco {name_db} não existe.")
+        print(f"\nBancos disponiveis: \n{list_db}")
+        name_db = input("\ninforme um dos bancos da lista:>>> ")
+
+    db = conexao[name_db]
+    list_collections = db.list_collection_names()
+
+    print(list_collections)
+    print('\nInforme o nome da coleção')
+    collection = input('Digite:>>> ')
+
+    while collection not in list_collections:
+        os.system('clear')
+        print(f"Coleção {collection} não existe.")
+        print(f"\nColeções disponiveis: \n{list_collection}")
+        collection = input('\nInforme o nome da coleção:>>> ')
+
+    collection_selec = db[collection]
+
+    os.system('clear')
+    print(f'Você esta trabalhando no banco {name_db} - coleção {collection}.\n')
+
+    print('\nInforme a chave e valor para consulta e posterior exclusão dos dados')
+
+    key = input('\nDigite a chave:>>> ')
+    value = input('\nDigite o valor:>>> ')
+
+    query = collection_selec.find(
+        {
+            key: {"$eq": value}
+        }
+    )
+    os.system('clear')
+
+    print('\nDocumentos encontrados:\n')
+
+    count_docs_in_query = 0
+    for doc in query:
+        pprint(doc)
+        count_docs_in_query += 1
+
+    if count_docs_in_query == 0:
+        print(f'\n {key}:{value} não retornou nenhum documento.')
+        sleep(4)
+        drop_doc()
+
+    print('\nTem certeza que deseja excluir? Digite N/n para retornar ao inicio sem excluir ou S/s para continuar.\n')
+
+    decision = input('Digite S/s(sim) ou N/n(não):>>>  ')
+
+    list_decision = ('S', 's', 'N', 'n')
+
+    while decision not in list_decision:
+        print('Digite S ou s para SIM e N ou n para NÂO:')
+        decision = input('Digite:>>> ')
+
+    if decision == 'N' or decision == 'n':
+        os.system('clear')
+        drop_doc_collection()
+
+    collection_selec.delete_many(
+        {
+            key: {"$eq": value}
+        }
+    )
+    os.system('clear')
+    print('Arquivos deletados')
+    sleep(2)
+    os.system('clear')
+    drop_doc_collection()
+
+def drop_collection():
+
+    os.system('clear')
+    print('Ao apagar uma coleção, você irá apagar todos os documentos e se for a unica coleção, o banco!\n')
+    print_bancos()
+    print('\nInforme o nome do banco para prosseguir ou exit para voltar \n')
+    name_db = input('Digite:>>> ')
+
+    if name_db == 'exit':
+        drop_doc_collection()
+
+    list_db = conexao.list_database_names()
+
+    while name_db not in list_db:
+        print(f'Banco {name_db} não existe')
+        print('\nInforme o nome do banco para prosseguir\n')
+        name_db = input('Digite:>>> ')
+
+    db = conexao[name_db]
+
+    list_collections = db.list_collection_names()
+    print(f'Coleções disponiveis {list_collections}')
+
+    print('\nInforme o nome da coleção')
+    collection = input('Digite:>>> ')
+
+    while collection not in list_collections:
+        os.system('clear')
+        print(f"Coleção {collection} não existe.")
+        print(f"\nColeções disponiveis: \n{collection}")
+        collection = input('\nInforme o nome da coleção:>>> ')
+
+    collection_selec = db[collection]
+
+    os.system('clear')
+    query = collection_selec.find({})
+    count_docs_in_query = 0
+
+    for count in query:
+        count_docs_in_query += 1
+
+    print(
+        f'Você esta trabalhando no banco {name_db} | coleção {collection}.\n')
+
+    print(
+        f'Você tem certeza que deseja excluir a coleção {collection}? Ela possui {count_docs_in_query} documentos.\n')
+
+    decision = input('Digite S/s(sim) ou N/n(não):>>>  ')
+
+    list_decision = ('S', 's', 'N', 'n')
+
+    while decision not in list_decision:
+        print('Digite S ou s para SIM e N ou n para NÂO:')
+        decision = input('Digite:>>> ')
+
+    if decision == 'N' or decision == 'n':
+        os.system('clear')
+        drop_doc_collection()
+
+    collection_selec.drop()
+
+    os.system('clear')
+    print('Coleção deletada')
+    sleep(1.7)
+    os.system('clear')
+    drop_doc_collection()
+
+def drop_doc_collection():
+
+    option_selec = home_menu_drops()
+
+    if option_selec == '0':
+        os.system('clear')
+        app_off()
+
+    if option_selec == '1':
+        drop_doc()
+
+    if option_selec == '2':
+        os.system('clear')
+        drop_collection()
+
+    if option_selec == '3':
+        func_app.app()
+
+#=======================================================================================#
+# Funções de ação para funcionalidade 4 do menu principal:
+
+def menu_consulta_inicial():
+    options_menu = ('0', '1', '2')
+    string = f"\nPara prosseguir Informe uma das seguintes opções do menu:{menus('sub_menu_4')}"
+    option_selec = inicial(options_menu, string)
     return option_selec
 
 def print_bancos():
-
-    list_db = conexao.list_database_names()   
-
+    list_db = conexao.list_database_names()
     print('Bancos Disponiveis: \n')
     print('='*20)
 
     for banco in list_db:
         print(f"  {banco}")
-
-    print('='*20)    
+    print('='*20)
 
 def sub_menu_consulta(option_selec):
-
-    if option_selec == 0:
+    if option_selec == '0':
+        os.system('clear')
         app_off()
 
-    if option_selec == 1:
-
+    if option_selec == '1':
         os.system('clear')
-
         print_bancos()
-
-        list_db = conexao.list_database_names()  
-
-        name_db = input("\nDigite nome do banco para qual deseja consultar a(s) coleção(ões):>>> ")
+        list_db = conexao.list_database_names()
+        name_db = input(
+            "\nDigite nome do banco para qual deseja consultar a(s) coleção(ões):>>> ")
 
         while name_db not in list_db:
-
             os.system('clear')
             print(f"Banco {name_db} não existe.")
             print(f"\nBancos disponiveis: \n{list_db}")
-            name_db = input("\nDigite nome do banco para qual deseja consultar a(s) coleção(ões):>>> ")
+            name_db = input(
+                "\nDigite nome do banco para qual deseja consultar a(s) coleção(ões):>>> ")
 
         banco = conexao[name_db]
-
         list_collections = banco.list_collection_names()
-
-        sleep(2)
         os.system('clear')
-
         print(f"\nColeções do banco {name_db}: \n{list_collections}")
 
         option = menu_consulta_inicial()
         sub_menu_consulta(option)
 
-    if option_selec == 2:
+    if option_selec == '2':
         os.system('clear')
         func_app.app()
 
-def listar_bancos_colecoes():
-
+def list_db_collections():
     print_bancos()
-
     option_selec = menu_consulta_inicial()
-
     sub_menu_consulta(option_selec)
-
-
-
-
-    
-
-    
