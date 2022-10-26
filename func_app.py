@@ -1,33 +1,53 @@
-from func_options import app_off, create_db_collection_doc, list_db_collections, menus, drop_doc_collection, find_doc_collection
-from basic_func import inicial
+import func_options
+import basic_func 
+import gc
 import os
+from time import sleep
+
+
+# função da opção 0 do menu principal:
+# Função para desligar o app, é chamada em todos os sub_menus e no menu principal.
+
+def app_off():
+   gc.collect()
+   os.system('clear')
+   print(f'\nObrigado por utilizar nosso aplicativo. {basic_func.salutation()}!\n')
+   print('\nAplicativo desenvolvido por Fernando Schneider.\n')
+   sleep(3)
+   os.system('clear')
+   return True 
 
 # Função que recebe as funcões do arquivo func_options e do basic_func
 def app():
-    
-    app_on_off = False
-    while app_on_off == False:
+   gc.collect()
+   app_on_off = False
 
-        options_menu = ('0','1','2','3','4')
+   while app_on_off == False:
 
-        string = f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{menus("menu")}'
+      options_menu = ('0','1','2','3','4')
+
+      string = f'\nPara prosseguir Informe uma das seguintes opções do menu:\n{basic_func.menus("menu")}'
         
-        opcao_menu_principal = inicial(options_menu, string)
+      opcao_menu_principal = basic_func.inicial(options_menu, string)
 
-        if opcao_menu_principal == '0':
-            os.system('clear')
-            app_on_off = app_off()
+      if opcao_menu_principal == '0':
+         gc.collect()
+         app_on_off = app_off()
 
-        if opcao_menu_principal == '1':
-            create_db_collection_doc()
+      elif opcao_menu_principal == '1':
+         gc.collect()
+         app_on_off = func_options.create_db_collection_doc()
         
-        if opcao_menu_principal == '2':
-            app_on_off = find_doc_collection()
+      elif opcao_menu_principal == '2':
+         gc.collect()
+         app_on_off = func_options.find_doc_collection()
 
-        if opcao_menu_principal == '3':
-            app_on_off = drop_doc_collection()
+      elif opcao_menu_principal == '3':
+         gc.collect()
+         app_on_off = func_options.drop_doc_collection()
 
-        if opcao_menu_principal == '4':
-            app_on_off = list_db_collections()
+      else:
+         gc.collect()
+         app_on_off = func_options.list_db_collections()
 
 

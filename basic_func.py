@@ -17,28 +17,27 @@ def menus(name):
                 "\n(0) - Sair.\n")
 
     if name == "sub_menu_1":
-        return ('\n(1) - Continuar.'
-                '\n(2) - Retornar ao menu inicial.'
-                '\n(0) - Sair.\n')
+        return ("\n(1) - Continuar."
+                "\n(2) - Retornar ao menu inicial.\n ")
+               
 
     if name == "sub_menu_2":
         return ("\n(1) - Todos os documentos. "
                 "\n(2) - Informe a quantidade de documentos. "
-                "\n(3) - Retornar ao menu principal. "
-                "\n(0) - Sair.\n")
+                "\n(3) - Retornar ao menu principal.\n ")
+              
 
     if name == "sub_menu_3":
         return ("\n(1) - Deletar documentos."
                 "\n(2) - Deletar Coleção. "
-                "\n(3) - Retornar ao menu principal. "
-                "\n(0) - Sair.\n")
+                "\n(3) - Retornar ao menu principal.\n ")
+              
 
     if name == "sub_menu_4":
         return ("\n(1) - Listar coleções. "
-                "\n(2) - Retornar ao menu principal. "
-                "\n(0) - Sair.\n")
+                "\n(2) - Retornar ao menu principal.\n ")
+                
 
-    return decision
 # Função de saudação, para dar Bom dia, boa tarde ou boa noite ao usuário, com base na hora atual do datetime.
 def salutation():
 
@@ -82,8 +81,8 @@ def inicial(options_menu, string):
 # Função para padronizar o sleep, é utilizado principalmente em locais onde 
 # tem uma mensagem que antecede a limpeza da tela, dando tempo para o usuario ler.
 def regressive_sleep():
-    for i in range(3,0,-1):
-        print(f'Voltando em {i}')
+    print(f'Voltando ')
+    for i in range(2,0,-1):
         sleep(1)
     os.system('clear')
 
