@@ -1,5 +1,5 @@
 
-# Trabalho final do modulo Banco de dados 2 do cusro Data Science da escola Growdev.  
+# Trabalho final do modulo Banco de dados 2 do curso Data Science da escola Growdev.  
 - https://www.growdev.com.br/
 - 
 Versão - 1.1 - 27/10/2022
