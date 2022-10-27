@@ -1,5 +1,5 @@
 
-# Trabalho final do modulo Banco de dados 2 do curso Data Science da escola Growdev.  
+# Trabalho final do modulo Banco de dados 2 do cusro Data Science da escola Growdev.  
 - https://www.growdev.com.br/
 
 Esta aplicação traz algumas funcionalidades básicas de um cliente MongoDb, como o mongoDb Compass, por exemplo.

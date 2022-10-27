@@ -67,7 +67,6 @@ def inserir_documento_db(colecao):
 
 # Função para criar bancos de dados
 
-
 def create_db_and_collection():
 
     os.system('clear')
@@ -96,12 +95,12 @@ def create_db_and_collection():
     db = conexao[name_db]
     list_collections = db.list_collection_names()
     os.system('clear')
-    print(
-        f'\nColeções disponiveis no banco {name_db}:  \n{list_collections}\n')
-    print('\nDigite a coleção, o nome da coleção que deseja criar ou digite EXIT para concluir e voltar ao inicio')
-    collection = input('Digite:>>> ')
+    print(f'\nColeções disponiveis no banco {name_db}:  \n{list_collections}\n')
+    print('\nDigite EXIT para salvar, concluir e voltar ao inicio \n\nDigite o nome de uma das coleções listadas ou informe o nome da coleção que deseja criar ')
+    collection = input('\nDigite:>>> ')
 
     if collection == "exit" or collection == "EXIT":
+
         collection_autocreate = db['teste']
 
         collection_autocreate.insert_one(
@@ -109,6 +108,7 @@ def create_db_and_collection():
                 "arquivo": "teste"
             }
         )
+        
         if name_db not in list_db:
             print(f"Banco >--- {name_db} criado com sucesso!")
             regressive_sleep()
@@ -127,15 +127,9 @@ def create_db_and_collection():
             del db
             gc.collect()
             create_db_collection_doc()
-    else:
-        pass
 
-    list_db = conexao.list_database_names()
-
-    list_collections = db.list_collection_names()
-
-    if collection not in list_collections:
-
+    elif collection not in list_collections:
+        
         string = (f'\nColeção >--- {collection} não existe, deseja criar?')
 
         decision = validade_decision(string)
@@ -152,22 +146,22 @@ def create_db_and_collection():
             create_db_collection_doc()
         else:
             pass
-    else:
-        pass
+        
+    del db
 
+    db = conexao[name_db]
     collection_selec = db[collection]
+
     collection_selec.insert_one(
         {
             "arquivo": "teste"
-        }
-    )
-    list_collections = db.list_collection_names()
+        })  
+
 
     os.system('clear')
-    print(
-        f'\nColeções disponiveis no banco >--- {name_db} \n{list_collections}\n')
+    print(f'\nVocê esta trabalhando no banco >---{name_db} | coleção >--- {collection}\n')
 
-    print('\nDigite EXIT - concluir e voltar ao inicio \n >--Digite ENTER para inserir um documento--<\n')
+    print('\n>--Digite EXIT para salvar, concluir e voltar ao inicio--<\n \n >--Digite ENTER para inserir um documento--<\n')
 
     decision = input('Digite:>>> ')
 
@@ -182,12 +176,10 @@ def create_db_and_collection():
         gc.collect()
         create_db_collection_doc()
     else:
-        collection_selec = db[collection]
 
         os.system('clear')
 
-        print(
-            f'Você esta trabalhando no banco >--- {name_db} | coleção >--- {collection}\n')
+        print(f'Você esta trabalhando no banco >--- {name_db} | coleção >--- {collection}\n')
         inserir_documento_db(collection_selec)
 
         string = ('\nDeseja inserir um novo documento?')
@@ -197,6 +189,7 @@ def create_db_and_collection():
         while decision == 'S' or decision == 's':
             del decision
             os.system('clear')
+            print(f'Você esta trabalhando no banco >--- {name_db} | coleção >--- {collection}\n')
             inserir_documento_db(collection_selec)
             string = ('\nDeseja inserir um novo documento?')
             decision = validade_decision(string)
@@ -220,6 +213,7 @@ def create_db_collection_doc():
     if option_selec == "1":
         create_db_and_collection()
     else:
+        os.system('clear')
         gc.collect()
         func_app.app()
 #=======================================================================================#
@@ -227,20 +221,18 @@ def create_db_collection_doc():
 
 # Função de menu, que será chamada em outros locais desta funcionalidade
 
-
 def home_menu_find():
 
     os.system('clear')
     options_menu = ('1', '2', '3')
 
-    string = (f'\nVocê pode visualizar todos os documentos, informar a quantidade ou ainda retornar. '
+    string = (f'\nVocê pode visualizar todos os documentos, informar a quantidade de documento que deseja visualizar ou retornar.\n '
               f'\ninforme uma das opções para continuar \n{menus("sub_menu_2")}\n')
 
     option_selec = inicial(options_menu, string)
     return option_selec
 
 # Função para listar os documentos, com base no limite informado pelo usuário.
-
 
 def search_docs(limit):
 
@@ -250,7 +242,7 @@ def search_docs(limit):
 
     print_bancos()
     list_db = conexao.list_database_names()
-    print('\nInforme o banco ou digite exit para retornar.\n')
+    print('\nInforme o banco ou digite EXIT para retornar.\n')
 
     name_db = input('Digite:>>> ')
     os.system('clear')
@@ -267,7 +259,7 @@ def search_docs(limit):
     db = conexao[name_db]
     list_collections = db.list_collection_names()
 
-    print(f"Coleções disponiveis >--- {list_collections}")
+    print(f"Coleções disponiveis >--- {list_collections} | banco >--- {name_db}")
     print('\nInforme o nome da coleção')
 
     collection = input('Digite:>>> ')
@@ -275,19 +267,18 @@ def search_docs(limit):
     while collection not in list_collections:
 
         os.system('clear')
-        print(f"Coleção {collection} não existe.")
-        print(f"\nColeções disponiveis >--- {list_collections}")
+        print(f"Coleção >--- {collection} não existe no banco >--- {name_db}.")
+        print(f"\nColeções disponiveis >--- {list_collections} | banco >--- {name_db}")
         collection = input('\nInforme o nome da coleção:>>> ')
 
     collection_selec = db[collection]
 
     os.system('clear')
-    print(
-        f'Você esta trabalhando no banco >--- {name_db} | coleção >--- {collection}.\n')
+    print(f'Você esta trabalhando no banco >--- {name_db} | coleção >--- {collection}.\n')
 
     options_menu = ('1', '2')
 
-    string = ('Deseja ver todos os documentos dessa coleção ou aplicar um filtro "chave":"valor"?\n'
+    string = ('Deseja visualizar todos os documentos dessa coleção ou aplicar um filtro "chave":"valor"?\n'
               '\n(1) - Todos documentos da coleção\n(2) - Informar chave e valor\n')
 
     option_selec = inicial(options_menu, string)
@@ -296,17 +287,16 @@ def search_docs(limit):
         query = collection_selec.find({}).limit(limit)
 
         os.system('clear')
-        print(f'Documentos da coleção >--- {collection}')
+        print(f'Documentos da coleção >--- {collection} | banco >--- {name_db}')
         for doc in query:
             pprint(doc)
             print('\n')
-        input('>--- Pressione ENTER para voltar <---')
+        input('\n>--- Pressione ENTER para voltar <---\n')
         find_doc_collection()
 
     else:
         os.system('clear')
-        print(
-            f'Você esta trabalhando no banco >--- {name_db} | coleção >--- {collection}.\n')
+        print(f'Você esta trabalhando no banco >--- {name_db} | coleção >--- {collection}.\n')
         print("\nInforme a chave e o valor\n")
         key = input("Digite a chave:>>> ")
         value = input("\nDigite o valor:>>> ")
@@ -324,12 +314,12 @@ def search_docs(limit):
             count_docs_in_query += 1
 
         if count_docs_in_query == 0:
-            print(f'\n {key}:{value} não retornou nenhum documento.')
+            print(f'\n {key}:{value} não retornou nenhum documento na coleção {collection}.')
             regressive_sleep()
             os.system('clear')
             find_doc_collection()
         else:
-            input('>--- Pressione ENTER para voltar <---')
+            input('\n>--- Pressione ENTER para voltar <---\n')
             os.system('clear')
             gc.collect()
             find_doc_collection()
@@ -353,7 +343,7 @@ def find_doc_collection():
 
         while test_limit_is_number == False:
             print(
-                f'Informação >--- {limit} não é valida, insira somente número')
+                f'Informação >--- {limit} não é valida, insira somente números')
             limit = input(
                 '\nDigite o número correspondente ao limite de documentos que deseja visualizar\nDigite:>>> ')
             test_limit_is_number = str.isnumeric(limit)
@@ -370,7 +360,6 @@ def find_doc_collection():
 # Funções de ação para funcionalidade 3 do menu principal Drop documentos e coleções:
 
 # função de menu da funcionalidade, será chamada em outras funções da funcionalidade 3.
-
 
 def home_menu_drops():
     os.system('clear')
@@ -392,12 +381,12 @@ def drop_doc():
 
     print_bancos()
     list_db = conexao.list_database_names()
-    print('\nInforme o banco ou digite exit para retornar.\n')
+    print('\nInforme o banco ou digite EXIT para retornar.\n')
 
     name_db = input('Digite:>>> ')
     os.system('clear')
 
-    if name_db == 'exit':
+    if name_db == 'exit' or name_db == 'EXIT':
         del name_db
         gc.collect()
         drop_doc_collection()
@@ -414,21 +403,20 @@ def drop_doc():
 
     list_collections = db.list_collection_names()
 
-    print(f"\nColeções disponiveis: \n{list_collections}")
+    print(f"\nColeções disponiveis: \n{list_collections} | banco >--- {name_db}")
     print('\nInforme o nome da coleção')
     collection = input('Digite:>>> ')
 
     while collection not in list_collections:
         os.system('clear')
-        print(f"Coleção >--- {collection} não existe.")
+        print(f"Coleção >--- {collection} não existe no banco >--- {name_db}")
         print(f"\nColeções disponiveis: \n{list_collections}")
         collection = input('\nInforme o nome da coleção:>>> ')
 
     collection_selec = db[collection]
 
     os.system('clear')
-    print(
-        f'Você esta trabalhando no banco >--- {name_db} | coleção >--- {collection}.\n')
+    print(f'Você esta trabalhando no banco >--- {name_db} | coleção >--- {collection}.\n')
 
     print('\nInforme a chave e valor para consulta e posterior exclusão dos dados')
 
@@ -457,7 +445,7 @@ def drop_doc():
     else:
         pass
 
-    string = ('\nTem certeza que deseja excluir? \nDigite N/n para retornar ao inicio SEM excluir ou S/s para continuar.\n')
+    string = ('\nTem certeza que deseja excluir? \nDigite N/n para não e retornar ao inicio SEM excluir ou S/s para sim e continuar.\n')
 
     decision = validade_decision(string)
 
@@ -490,10 +478,10 @@ def drop_collection():
     os.system('clear')
     print('Ao apagar uma coleção, você irá apagar todos os documentos contidos nela. \nSe for a unica coleção do banco, irá apagar o banco!\n')
     print_bancos()
-    print('\nInforme o nome do banco para prosseguir ou digite exit para voltar \n')
+    print('\nInforme o nome do banco para prosseguir ou digite EXIT para voltar \n')
     name_db = input('Digite:>>> ')
 
-    if name_db == 'exit':
+    if name_db == 'exit' or name_db == 'exit':
         del name_db
         gc.collect()
         drop_doc_collection()
@@ -548,7 +536,7 @@ def drop_collection():
     else:
         collection_selec.drop()
         os.system('clear')
-        print('Coleção deletada')
+        print(f'Coleção {collection} deletada do banco {name_db}')
         regressive_sleep()
         os.system('clear')
         del decision
@@ -583,7 +571,6 @@ def drop_doc_collection():
 
 # Menu inical da funcionalidade, será invocado em outros momentos.
 
-
 def home_menu_consult():
     options_menu = ('1', '2')
     string = f"\nPara prosseguir Informe uma das seguintes opções do menu:{menus('sub_menu_4')}"
@@ -606,16 +593,27 @@ def sub_menu_consult():
     while name_db not in list_db:
         os.system('clear')
         print(f"Banco >--- {name_db} não existe.")
-        print(
-            f"\nBancos disponiveis: \n{list_db}\n\nDigite nome do banco para qual deseja consultar a(s) coleção(ões)")
+        print(f"\nBancos disponiveis: \n{list_db}\n\nDigite nome do banco para qual deseja consultar a(s) coleção(ões)")
         name_db = input("Digite>>> ")
 
-    banco = conexao[name_db]
-    list_collections = banco.list_collection_names()
+    db = conexao[name_db]
+    list_collections = db.list_collection_names()
     os.system('clear')
-    print(f"\nColeções do banco >--- {name_db}: \n{list_collections}")
-
+    print(f"\nColeções do banco >--- {name_db}: ")
+    for collection in list_collections:
+        collection_selec = db[collection]
+        count = 0
+        query = collection_selec.find({})
+        for doc in query:
+            count += 1
+        print(f'\n>--- {collection} | Possui >--- {count} documentos')
     input("\n>---Digite ENTER para retornar---<\n")
+    del db
+    del name_db
+    del list_db
+    del collection_selec
+    del collection
+    del query
     gc.collect()
     os.system('clear')
     list_db_collections()
