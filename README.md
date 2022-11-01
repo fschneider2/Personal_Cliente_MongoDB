@@ -13,7 +13,7 @@ A aplicação foi criada com base em um menu e sub menus, funciona em loop, ou s
 
 ## Autores
 
-- [Fernando Schneider](www.linkedin.com/in/fernando-schneiderdev)
+- Fernando Schneider --> www.linkedin.com/in/fernando-schneiderdev
 
 
 ## Stack utilizada
@@ -91,7 +91,7 @@ Com essa aplicação aprendi sobre varias funções python, back end e interaç�
 
 ## Documentação
 
-- Fiz um viideo de apresentação as funções e arquivos:
+- Video de apresentação as funções, arquivos e funcinalidades:
 
  - https://www.youtube.com/watch?v=xlbg9PPMC7A
 
@@ -109,7 +109,7 @@ Com essa aplicação aprendi sobre varias funções python, back end e interaç�
     
     Versão 1.1 apresenta o nome das coleções e a quantidade de documentos presentes em cada coleção.
 
-### Informações básicas sobre os arquivos da aplicação:
+--> Informações básicas sobre os arquivos da aplicação:
 
 - basic_func.py:
 
